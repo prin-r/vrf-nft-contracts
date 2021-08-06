@@ -187,7 +187,7 @@ abstract contract ItemMinterBase is VRFConsumerBase, Ownable {
         buyOrders[buyOrderKeyToBuyOrderNumber[seed]] = buyOrder;
 
         Item memory rewardItem = items[uint256(result) % itemCount];
-        // token.mint(msg.sender, rewardItem.tokenURI);
+        token.mint(buyOrder.buyer, rewardItem.tokenURI);
 
         emit ResolveBuyOrder(buyOrder.id, seed, time, result);
     }

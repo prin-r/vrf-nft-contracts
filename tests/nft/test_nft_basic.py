@@ -30,3 +30,26 @@ def test_nft_minting():
     assert token.totalSupply() == 1
     assert token.tokenURI(0) == "URI_A"
     assert token.ownerOf(0) == accounts[0]
+
+
+def test_nft_minting_fail():
+    token = init_nft()
+
+    # before
+    assert token.balanceOf(accounts[0]) == 0
+    assert token.totalSupply() == 0
+    with reverts("ERC721Metadata: URI query for nonexistent token"):
+        token.tokenURI(0)
+    with reverts("ERC721: owner query for nonexistent token"):
+        token.ownerOf(0)
+
+    with reverts("Caller is not a minter"):
+        token.mint(accounts[0], "URI_A", {"from": accounts[1]})
+
+    # after
+    assert token.balanceOf(accounts[0]) == 0
+    assert token.totalSupply() == 0
+    with reverts("ERC721Metadata: URI query for nonexistent token"):
+        token.tokenURI(0)
+    with reverts("ERC721: owner query for nonexistent token"):
+        token.ownerOf(0)
